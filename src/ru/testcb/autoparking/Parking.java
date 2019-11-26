@@ -1,5 +1,7 @@
 package ru.testcb.autoparking;
 
+import com.sun.java.swing.plaf.windows.WindowsDesktopIconUI;
+
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -7,7 +9,7 @@ public class Parking implements Runnable {
     Map<String, Automobil> parking = new HashMap<String, Automobil>();
     static int PARKING_SIZE = 0;
     private int indexAuto = 0;
-
+    private static int delta;
     static final Semaphore SEMAPHORE = new Semaphore(1, true);
 
     public Parking(int PARKING_SIZE) {
@@ -15,37 +17,19 @@ public class Parking implements Runnable {
     }
 
     void fillParking() {
+        delta = PARKING_SIZE - indexAuto;
         for (indexAuto = parking.size(); indexAuto < PARKING_SIZE; indexAuto++) {
-            if (indexAuto < PARKING_SIZE / 2) {
+            if (indexAuto < (PARKING_SIZE - delta / 2)) {
                 Truck truck = new Truck("truck_" + String.valueOf(indexAuto), String.valueOf(indexAuto));
                 parking.put(truck.getNumber(), truck);
+                indexAuto++;
+                System.out.println("Added Truck with number №" + truck.getNumber() + " end name = " + truck.getNameAuto());
             } else {
                 Car car = new Car("car_" + String.valueOf(indexAuto), String.valueOf(indexAuto));
                 parking.put(car.getNumber(), car);
+                indexAuto++;
+                System.out.println("Added Car with number №" + car.getNumber() + " end name = " + car.getNameAuto());
             }
-        }
-    }
-
-    private void parkSomeAuto() {
-        int carOrTruck = getRandomNumberInRange(0, 1);
-        Car car;
-        Truck truck;
-        switch (carOrTruck) {
-            case 0:
-                car = new Car("car_" + String.valueOf(indexAuto), String.valueOf(indexAuto));
-                parking.put(car.getNumber(), car);
-                indexAuto++;
-                System.out.println("Added car with number №" + car.getNumber() + " end name = " + car.getNameAuto());
-                break;
-            case 1:
-                truck = new Truck("truck_" + String.valueOf(indexAuto), String.valueOf(indexAuto));
-                parking.put(truck.getNumber(), truck);
-                indexAuto++;
-                System.out.println("Added truck with number №" + truck.getNumber() + " end name = " + truck.getNameAuto());
-                break;
-            default:
-                System.out.println("While can't add auto, all places are taken");
-                break;
         }
     }
 

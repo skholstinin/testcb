@@ -5,7 +5,7 @@ public class main {
         System.out.println("Hello it's autoparking App");
         Parking parking = new Parking(10);
         parking.fillParking();
-        for (int i = 1; i < 2; i++) {
+        for (int i = 1; i < 4; i++) {
             new Thread(parking).start();
             Thread.sleep(1000);
         }
