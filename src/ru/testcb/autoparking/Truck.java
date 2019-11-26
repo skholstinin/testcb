@@ -2,11 +2,11 @@ package ru.testcb.autoparking;
 
 import java.util.Objects;
 
-public class Track implements Automobil {
+public class Truck implements Automobil {
     private final String nameAuto;
     private final String number;
 
-    public Track(String nameAuto, String number) {
+    public Truck(String nameAuto, String number) {
         this.nameAuto = nameAuto;
         this.number = number;
     }
@@ -39,7 +39,7 @@ public class Track implements Automobil {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Track track = (Track) o;
+        Truck track = (Truck) o;
         return Objects.equals(nameAuto, track.nameAuto) &&
                 Objects.equals(number, track.number);
     }

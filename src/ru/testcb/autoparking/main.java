@@ -1,16 +1,14 @@
 package ru.testcb.autoparking;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
-
 public class main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         System.out.println("Hello it's autoparking App");
-        JoinParking parking = new JoinParking();
-        parking.addCarToParking(new Car("1", "bmw"));
-        parking.removeCarFromParking("1");
-        parking.run();
+        Parking parking = new Parking(10);
+        parking.fillParking();
+        for (int i = 1; i < 2; i++) {
+            new Thread(parking).start();
+            Thread.sleep(1000);
+        }
 
     }
 }

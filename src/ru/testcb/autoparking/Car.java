@@ -6,6 +6,11 @@ public class Car implements Automobil {
     private String number;
     private String nameAuto;
 
+    public Car(String nameAuto, String number) {
+        this.number = number;
+        this.nameAuto = nameAuto;
+    }
+
     @Override
     public String toString() {
         return "Car{" +
@@ -26,11 +31,6 @@ public class Car implements Automobil {
     @Override
     public int hashCode() {
         return Objects.hash(number, nameAuto);
-    }
-
-    public Car(String number, String nameAuto) {
-        this.number = number;
-        this.nameAuto = nameAuto;
     }
 
     @Override
