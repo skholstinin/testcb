@@ -6,24 +6,17 @@ import java.util.Random;
 public class Car implements Automobil {
     private String number;
     private String nameAuto;
-    private int timeParking = 0;
+    private long endParkingTime = 0;
 
     public Car(String nameAuto, String number) {
         this.number = number;
         this.nameAuto = nameAuto;
-        timeParking = getRandomNumberInRange(1, 5);
+        endParkingTime = System.currentTimeMillis() + getRandomNumberInRange(1, 100) * 100;//генерируем вермя стояния авто на пароквке
     }
 
     @Override
-    public int getTimeParking() {
-        return timeParking;
-    }
-
-    @Override
-    public void decrementTimeParking() {
-        if (timeParking > 0) {
-            timeParking--;
-        }
+    public long getEndTimeParking() {
+        return endParkingTime;
     }
 
     @Override

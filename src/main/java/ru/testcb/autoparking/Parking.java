@@ -22,15 +22,15 @@ public class Parking implements Runnable {
     }
 
     private void incrementIndexAuto() {
-        indexAuto++;
+        indexAuto++;//для генерации автомобилей
     }
 
-    synchronized Car generateOneSomeCar() {
+    synchronized private Car generateOneSomeCar() {
         incrementIndexAuto();
         return new Car("car_" + String.valueOf(indexAuto), String.valueOf(indexAuto));
     }
 
-    synchronized Truck generateOneSomeTruck() {
+    synchronized private Truck generateOneSomeTruck() {
         incrementIndexAuto();
         return new Truck("truck_" + String.valueOf(indexAuto), String.valueOf(indexAuto));
     }
@@ -43,7 +43,7 @@ public class Parking implements Runnable {
                 System.out.println("Added car with number №" + automobil.getNumber() + " and name = " + automobil.getNameAuto());
 
             } else {
-                System.out.println("There aren't nothing places for car on the general parking");
+                System.out.println("There aren't no one places for car on the general parking");
             }
         }
         if (automobil instanceof Truck) {//если грузовик и мест на парковке больше двух
@@ -52,7 +52,7 @@ public class Parking implements Runnable {
                 sizeFreePlacesGeneralParking -= 2;
                 System.out.println("Added truck with number №" + automobil.getNumber() + " and name = " + automobil.getNameAuto());
             } else {
-                System.out.println("There aren't nothing places for truck on the general parking");
+                System.out.println("There aren't no one places for truck on the general parking");
             }
         }
     }
@@ -63,7 +63,7 @@ public class Parking implements Runnable {
             sizeFreePlacesTruckParking--;
             System.out.println("Added truck with number №" + truck.getNumber() + " and name = " + truck.getNameAuto());
         } else {
-            System.out.println("There aren't nothing places on the truck parking");
+            System.out.println("There aren't no one places on the truck parking");
         }
     }
 
@@ -102,7 +102,7 @@ public class Parking implements Runnable {
         try {
             SEMAPHORE.acquire();
             if (sizeFreePlacesTruckParking == 0) {
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } else {
                 synchronized (truckParking) {
                     for (int i = truckParking.size(); i < PARKING_SIZE_TRUCK; i++) {
@@ -111,10 +111,10 @@ public class Parking implements Runnable {
                 }
             }
             if (sizeFreePlacesGeneralParking == 0) {
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } else {
                 synchronized (generalParking) {
-                    if (getRandomNumberInRange(0, 100) > 50) {
+                    if (getRandomNumberInRange(0, 1000) > 500) {
                         addCarToGeneralParking(generateOneSomeCar());
                     } else {
                         addCarToGeneralParking(generateOneSomeTruck());
@@ -124,37 +124,33 @@ public class Parking implements Runnable {
             if (sizeFreePlacesGeneralParking == 0) {
                 synchronized (generalParking) {
                     System.out.println("Wait until at least one place on general parking is being free");
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                     List<Automobil> tempList = new ArrayList<Automobil>();
+                    long currentTime = System.currentTimeMillis();
                     for (Automobil auto : generalParking) {
-                        if (auto.getTimeParking() != 0) {
-                            auto.decrementTimeParking();
-                        } else {
-                            tempList.add(auto);
+                        if (auto.getEndTimeParking() < currentTime) {
+                            tempList.add(auto);//чтобы не удалять во время перебора списка
                         }
                     }
-                    for (Automobil auto : tempList) {
+                    for (Automobil auto : tempList) {//чтобы не удалять во время перебора списка
                         unparkSomeAuto(auto);
                     }
-                    Thread.sleep(1000);
                 }
             }
             if (sizeFreePlacesTruckParking == 0) {
                 synchronized (truckParking) {
                     System.out.println("Wait until at least one place on truck parking is being free");
-                    Thread.sleep(5000);
-                    List<Truck> tempList = new ArrayList<Truck>();
+                    Thread.sleep(1000);
+                    List<Truck> tempList = new ArrayList<>();
+                    long currentTime = System.currentTimeMillis();
                     for (Truck truck : truckParking) {
-                        if (truck.getTimeParking() > 0) {
-                            truck.decrementTimeParking();//decrement count parking time for know when auto have left parking
-                        } else {
-                            tempList.add(truck);
+                        if (truck.getEndTimeParking() < currentTime) {
+                            tempList.add(truck);//чтобы не удалять во время перебора списка
                         }
                     }
-                    for (Truck truck : tempList) {
+                    for (Truck truck : tempList) {//чтобы не удалять во время перебора списка
                         unparkSomeAuto(truck);
                     }
-                    Thread.sleep(1000);
                 }
             }
         } catch (InterruptedException e) {

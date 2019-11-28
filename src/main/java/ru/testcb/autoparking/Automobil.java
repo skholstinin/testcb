@@ -7,7 +7,5 @@ public interface Automobil {
 
     String getNameAuto();
 
-    int getTimeParking();
-
-    void decrementTimeParking();
+    long getEndTimeParking();
 }
